@@ -1,13 +1,11 @@
-import { config as dotenvConfig } from "dotenv";
-import "@nomicfoundation/hardhat-toolbox";
-
-dotenvConfig();
+require("dotenv").config();
+require("@nomicfoundation/hardhat-toolbox");
 
 const PRIVATE_KEY = process.env.PRIVATE_KEY || "";
 const ALCHEMY_API_KEY = process.env.ALCHEMY_API_KEY || "";
 
-const config = {
-  solidity: "0.8.21",
+module.exports = {
+  solidity: "0.8.28",
   networks: {
     localhost: {
       url: "http://127.0.0.1:8545",
@@ -23,5 +21,3 @@ const config = {
     coinmarketcap: process.env.COINMARKETCAP_API_KEY || "",
   },
 };
-
-export default config;
