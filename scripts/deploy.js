@@ -1,13 +1,15 @@
-const hre = require("hardhat");
+import { ethers } from "hardhat";
 
 async function main() {
-    const SecureBank = await hre.ethers.deployContract("SecureBank");
-    await SecureBank.waitForDeployment();
+    const SecureBank = await ethers.getContractFactory("SecureBank");
+    const secureBank = await SecureBank.deploy();
 
-    console.log(`SecureBank deployed to: ${SecureBank.target}`);
+    await secureBank.waitForDeployment();
+
+    console.log("SecureBank desplegado en:", secureBank.target);
 }
 
 main().catch((error) => {
     console.error(error);
-    process.exitCode = 1;
+    process.exit(1);
 });
