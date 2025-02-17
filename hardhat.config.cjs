@@ -7,9 +7,11 @@ const ALCHEMY_API_KEY = process.env.ALCHEMY_API_KEY || "";
 module.exports = {
   solidity: "0.8.28",
   networks: {
-    localhost: {
+      localhost: {
       url: "http://127.0.0.1:8545",
+      hardhat: {}
     },
+
     arbitrumSepolia: {
       url: `https://arb-sepolia.g.alchemy.com/v2/${ALCHEMY_API_KEY}`,
       accounts: PRIVATE_KEY ? [PRIVATE_KEY] : [],
