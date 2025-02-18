@@ -1,1 +1,0 @@
-const [owner] = await ethers.getSigners();console.log("Owner Address:", owner.address);
