@@ -41,15 +41,18 @@ async function main(depositAmount, transferAmount, recipientAddress) {
             console.log("Depósito realizado con éxito!");
         }
 
-        // 4️⃣ Transferencia a otra cuenta (si es mayor que 0)
-        if (parseFloat(transferAmount) > 0) {
-            const transferWei = ethers.parseEther(transferAmount);
-            console.log(`Transfiriendo ${ethers.formatEther(transferWei)} ETH a ${recipientAddress}...`);
+        // 4️⃣ Transferencia a otra cuenta (si es mayor que 0 y la dirección es válida)
+if (parseFloat(transferAmount) > 0 && ethers.isAddress(recipientAddress)) {
+    const transferWei = ethers.parseEther(transferAmount);
+    console.log(`Transfiriendo ${ethers.formatEther(transferWei)} ETH a ${recipientAddress}...`);
 
-            const txTransfer = await contract.transfer(recipientAddress, transferWei);
-            await txTransfer.wait();
-            console.log("Transferencia realizada con éxito!");
-        }
+    const txTransfer = await contract.transfer(recipientAddress, transferWei);
+    await txTransfer.wait();
+    console.log("Transferencia realizada con éxito!");
+} else if (!ethers.isAddress(recipientAddress)) {
+    console.log("❌ Dirección de destinatario no válida. No se realizó la transferencia.");
+}
+
 
         // 5️⃣ Ver saldo después de la transferencia o depósito
         let balance = await contract.getBalance();
