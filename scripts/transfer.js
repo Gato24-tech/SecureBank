@@ -1,7 +1,14 @@
 import hardhat from "hardhat";
+import readline from "readline";
+
 const { ethers } = hardhat;
 
-async function main() {
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+});
+
+async function main(depositAmount) {
     // 1️⃣ Obtener dos cuentas para la transferencia
     const [owner, recipient] = await ethers.getSigners();
     console.log("Owner Address:", owner.address);
@@ -10,28 +17,20 @@ async function main() {
     // 2️⃣ Obtener el contrato
     const contract = await ethers.getContractAt("SecureBank", "0x5FbDB2315678afecb367f032d93F642f64180aa3");
 
-    // 3️⃣ Realizar un depósito
-    const depositAmount = ethers.parseEther("1.0"); // Conversión correcta
-    console.log(`Depositando ${ethers.formatEther(depositAmount)} ETH...`);
+    // 3️⃣ Realizar un depósito con la cantidad ingresada por el usuario
+    const depositWei = ethers.parseEther(depositAmount);
+    console.log(`Depositando ${ethers.formatEther(depositWei)} ETH...`);
 
-    const txDeposit = await contract.deposit({ value: depositAmount });
+    const txDeposit = await contract.deposit({ value: depositWei });
     await txDeposit.wait();
     console.log("Depósito realizado con éxito!");
-
-    // Realizar una transferencia a recipient
-    const transferAmount = ethers.parseEther("0.3");
-    console.log(`Transfiriendo ${ethers.formatEther(transferAmount)} ETH a ${recipient.address}...`);
-
-    const txTransfer = await contract.transfer(recipient.address, transferAmount);
-    await txTransfer.wait();
-    console.log("Transferencia realizada con éxito!");
 
     // 4️⃣ Ver saldo después del depósito
     let balance = await contract.getBalance();
     console.log(`Saldo actual: ${ethers.formatEther(balance)} ETH`);
 
     // 5️⃣ Retirar fondos
-    const withdrawAmount = ethers.parseEther("0.5"); // Conversión correcta
+    const withdrawAmount = ethers.parseEther("0.5"); // Sigue siendo un valor fijo
     console.log(`Intentando retirar ${ethers.formatEther(withdrawAmount)} ETH...`);
 
     const txWithdraw = await contract.withdraw(withdrawAmount);
@@ -43,8 +42,11 @@ async function main() {
     console.log(`Saldo final: ${ethers.formatEther(balance)} ETH`);
 }
 
-// Manejo de errores
-main().catch((error) => {
-    console.error("Error:", error);
-    process.exit(1);
+// 7️⃣ Capturar entrada del usuario y ejecutar `main` con el valor ingresado
+rl.question("¿Cuánto vas a depositar? ", (amount) => {
+    rl.close();  // Cerrar la entrada antes de ejecutar el script
+    main(amount).catch((error) => {
+        console.error("Error:", error);
+        process.exit(1);
+    });
 });
