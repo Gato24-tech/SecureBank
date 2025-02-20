@@ -29,7 +29,7 @@ contract SecureBank {
         require(amount > 0, "El monto debe ser mayor a 0");
         require(balances[msg.sender] >= amount, "Fondos insuficientes");
         require(recipient != address(0), "Direccion no valida");
-        emit Transfer(sender, amount);
+        emit Transfer(msg.sender, amount);
 
         balances[msg.sender] -= amount;
         balances[recipient] += amount;
