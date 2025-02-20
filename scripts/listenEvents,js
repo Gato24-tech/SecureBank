@@ -1,0 +1,43 @@
+import hardhat from "hardhat";
+const { ethers } = hardhat;
+
+async function main() {
+    const [owner] = await ethers.getSigners();
+    console.log("Address owner", address.owner);
+    const [recipient] = await ethers.getsigners();
+    console.log("Address recipient", address.recipient);
+
+    const contract = await getContractAt("secureBank", "0x5FbDB2315678afecb367f032d93F642f64180aa3");
+
+    const depositAmount =  ethers.parseEther("1.0");
+    console.log(`Depositando ${ethers.formatEther(depositAmount)} ETH...`);
+    const txDeposit = contract.deposit({value: depositAmount});
+    await txDeposit.wait();
+    
+    contract.on("deposited", (sender, amount) => {
+    console.log(`Deposito detectado: ${ sender } ha depositado ${ethers.formatEther(amount)} ETH`);
+    });
+    
+    const balance = await getBalance();
+    console.log(`Saldo actual: ${ethers.formatEther(balance)} ETH`);
+    
+    const transferAmount = ethers.parseEther("0.5");
+    console.log(`Transfiriendo: ${ethers.formatEther(transferAmount)} ETH a ${recipient.address}...`);
+
+    const txTransfer = await contract.transfer(recipient.amount , transferAmount);
+    await txTransfer.wait();
+    console.log("Transferencia realizada con éxito");
+
+    balance = await getBalance();
+    console.log(`Saldo actualizado: ${erhers.formatEther(balance)} ETH`);
+
+    contract.on("Transfer" (sender, amount)) => {}
+    console.log(`Transferencia; ${sender} ha transferido ${ethers.formatEther(amount)} ETH...`);
+
+    main().catch(("Error") => {
+       console.error(error);
+       process.exitCode(1);
+
+    });
+
+}
