@@ -1,39 +1,31 @@
-import { useState, useEffect } from "react";
-import { getContract } from "./web3";
+const { ethers } = require("hardhat");
+const fs = require("fs");
 
-function App() {
-    const [balance, setBalance] = useState(0);
-    const [amount, setAmount] = useState("");
+async function main() {
+    // 1️⃣ Obtenemos el contrato
+    const SecureBank = await ethers.getContractFactory("SecureBank");
 
-    useEffect(() => {
-        async function fetchBalance() {
-            const contract = await getContract();
-            if (contract) {
-                const signerAddress = await contract.signer.getAddress();
-                const balance = await contract.getBalance();
-                setBalance(ethers.formatEther(balance));
-            }
-        }
-        fetchBalance();
-    }, []);
+    // 2️⃣ Lo desplegamos
+    const secureBank = await SecureBank.deploy();
+    await secureBank.waitForDeployment();
 
-    const handleDeposit = async () => {
-        const contract = await getContract();
-        if (contract) {
-            const tx = await contract.deposit({ value: ethers.parseEther(amount) });
-            await tx.wait();
-            alert(`Depositaste ${amount} ETH`);
-        }
+    // 3️⃣ Obtenemos la dirección del contrato desplegado
+    const contractAddress = await secureBank.getAddress();
+    console.log("SecureBank desplegado en:", contractAddress);
+
+    // 4️⃣ Guardamos la dirección en deployments.json
+    const deploymentsPath = "./frontend/public/deployments.json";
+
+    const deployments = {
+        SecureBank: contractAddress,
     };
 
-    return (
-        <div>
-            <h1>SecureBank</h1>
-            <p>Balance: {balance} ETH</p>
-            <input type="text" value={amount} onChange={(e) => setAmount(e.target.value)} placeholder="Cantidad en ETH" />
-            <button onClick={handleDeposit}>Depositar</button>
-        </div>
-    );
+    fs.writeFileSync(deploymentsPath, JSON.stringify(deployments, null, 2));
+    console.log(`Dirección guardada en ${deploymentsPath}`);
 }
 
-export default App;
+// Manejo de errores
+main().catch((error) => {
+    console.error(error);
+    process.exit(1);
+});
