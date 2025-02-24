@@ -4,7 +4,7 @@ pragma solidity 0.8.28;
 contract SecureBank {
     event Deposited(address indexed sender, uint256 amount);
     event Withdrawn(address indexed sender, uint256 amount);
-    event Transfer(address indexed sender, uint256 amount);
+    event Transfer(address indexed sender, address indexed recipient, uint256 amount);
 
     mapping(address => uint256) public balances;
 
@@ -29,7 +29,7 @@ contract SecureBank {
         require(amount > 0, "El monto debe ser mayor a 0");
         require(balances[msg.sender] >= amount, "Fondos insuficientes");
         require(recipient != address(0), "Direccion no valida");
-        emit Transfer(msg.sender, amount);
+        emit Transfer(msg.sender,recipient, amount);
 
         balances[msg.sender] -= amount;
         balances[recipient] += amount;
