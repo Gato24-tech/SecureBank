@@ -1,16 +1,39 @@
-import hardhat from "hardhat";
-const { ethers } = hardhat;
+import { useState, useEffect } from "react";
+import { getContract } from "./web3";
 
-async function main() {
-    const SecureBank = await ethers.getContractFactory("SecureBank");
-    const secureBank = await SecureBank.deploy();
+function App() {
+    const [balance, setBalance] = useState(0);
+    const [amount, setAmount] = useState("");
 
-    await secureBank.waitForDeployment();
+    useEffect(() => {
+        async function fetchBalance() {
+            const contract = await getContract();
+            if (contract) {
+                const signerAddress = await contract.signer.getAddress();
+                const balance = await contract.getBalance();
+                setBalance(ethers.formatEther(balance));
+            }
+        }
+        fetchBalance();
+    }, []);
 
-    console.log("SecureBank desplegado en:", secureBank.target);
+    const handleDeposit = async () => {
+        const contract = await getContract();
+        if (contract) {
+            const tx = await contract.deposit({ value: ethers.parseEther(amount) });
+            await tx.wait();
+            alert(`Depositaste ${amount} ETH`);
+        }
+    };
+
+    return (
+        <div>
+            <h1>SecureBank</h1>
+            <p>Balance: {balance} ETH</p>
+            <input type="text" value={amount} onChange={(e) => setAmount(e.target.value)} placeholder="Cantidad en ETH" />
+            <button onClick={handleDeposit}>Depositar</button>
+        </div>
+    );
 }
 
-main().catch((error) => {
-    console.error(error);
-    process.exit(1);
-});
+export default App;
