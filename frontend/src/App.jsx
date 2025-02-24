@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { ethers } from "ethers";  // ✅ Importamos ethers
 import { getContract } from "./web3";
 
 function App() {
