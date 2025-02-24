@@ -1,6 +1,7 @@
+import React from "react"; // Solución al error de JSX
 import { useState, useEffect } from "react";
-import { ethers } from "ethers";  // ✅ Importamos ethers
 import { getContract } from "./web3";
+import ethers from "ethers";
 
 function App() {
     const [balance, setBalance] = useState(0);
@@ -10,7 +11,6 @@ function App() {
         async function fetchBalance() {
             const contract = await getContract();
             if (contract) {
-                const signerAddress = await contract.signer.getAddress();
                 const balance = await contract.getBalance();
                 setBalance(ethers.formatEther(balance));
             }
