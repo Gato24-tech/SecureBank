@@ -1,5 +1,10 @@
-import { ethers } from "hardhat";
-const fs = require("fs");
+/* eslint-disable no-undef */ 
+import path from "path";
+import { fileURLToPath } from "url";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename); // esta línea no es necesaria
+
+
 
 async function main() {
     // 1️⃣ Obtenemos el contrato
