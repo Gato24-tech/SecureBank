@@ -1,36 +1,14 @@
-/* eslint-disable no-undef */ 
-import path from "path";
-import { fileURLToPath } from "url";
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename); // esta línea no es necesaria
-
-
+const hre = require("hardhat");
 
 async function main() {
-    // 1️⃣ Obtenemos el contrato
-    const SecureBank = await ethers.getContractFactory("SecureBank");
-
-    // 2️⃣ Lo desplegamos
+    const SecureBank = await hre.ethers.getContractFactory("SecureBank");
     const secureBank = await SecureBank.deploy();
     await secureBank.waitForDeployment();
-
-    // 3️⃣ Obtenemos la dirección del contrato desplegado
-    const contractAddress = await secureBank.getAddress();
-    console.log("SecureBank desplegado en:", contractAddress);
-
-    // 4️⃣ Guardamos la dirección en deployments.json
-    const deploymentsPath = "./frontend/public/deployments.json";
-
-    const deployments = {
-        SecureBank: contractAddress,
-    };
-
-    fs.writeFileSync(deploymentsPath, JSON.stringify(deployments, null, 2));
-    console.log(`Dirección guardada en ${deploymentsPath}`);
+  
+    console.log("SecureBank deployed to:", await secureBank.getAddress());
 }
 
-// Manejo de errores
 main().catch((error) => {
     console.error(error);
-    process.exit(1);
+    process.exitCode = 1;
 });
