@@ -1,10 +1,10 @@
 {
   "name": "securebank-1",
   "version": "1.0.0",
-  "main": "hardhat.config.js",
+  "main": "hardhat.config.mjs",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "hardhat test"
   },
   "keywords": [],
   "author": "",
@@ -17,5 +17,8 @@
     "eslint": "^9.20.1",
     "globals": "^15.15.0",
     "hardhat": "^2.22.19"
+  },
+  "dependencies": {
+    "ethers": "^6.13.5"
   }
 }
