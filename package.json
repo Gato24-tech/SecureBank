@@ -4,7 +4,7 @@
   "main": "hardhat.config.mjs",
   "type": "module",
   "scripts": {
-    "test": "hardhat test"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
