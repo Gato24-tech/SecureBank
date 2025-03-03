@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "hardhat.config.cjs",
   "type": "module",
-    "scripts": {
+  "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -19,6 +19,7 @@
     "hardhat": "^2.22.19"
   },
   "dependencies": {
+    "@walletconnect/web3-provider": "^1.8.0",
     "ethers": "^6.13.5"
   }
 }
